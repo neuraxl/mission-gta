@@ -109,6 +109,15 @@ input[type=file]{display:none}
 .lib-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
 .lib-title{font-weight:800;margin:10px 0 2px}
 .lib-card .btn-replay{margin-top:10px;width:100%;font-size:1.05rem}
+.lib-card audio{display:none}
+#themeAccueil{display:none}
+#btnTheme{position:fixed;right:14px;bottom:14px;z-index:80;width:52px;height:52px;min-height:52px;border-radius:50%;border:2px solid var(--gold);background:var(--navy);color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:0}
+#btnTheme[aria-pressed="true"]{opacity:.55}
+#preroll{margin:18px auto;max-width:430px}
+#preroll .preroll-inner{background:#160f2acc;border:2px solid var(--gold);border-radius:18px;padding:14px;text-align:center}
+#preroll .preroll-tag{font-weight:800;color:var(--gold);margin-bottom:10px}
+#preroll video{width:100%;border-radius:12px;background:#000}
+#preroll .preroll-note{color:#cfc4e6;font-weight:600;margin:10px 0 0}
 .hidden{display:none!important}
 /* PRICING */
 .prices{display:grid;gap:14px}
@@ -121,6 +130,15 @@ input[type=file]{display:none}
 .price ul{margin:10px 0 18px;padding-left:20px;color:var(--muted)}
 .price .btn{margin-top:auto}
 .tag{align-self:flex-start;background:var(--pink);color:#fff;font-size:.75rem;font-weight:800;letter-spacing:.1em;padding:4px 10px;border-radius:99px;text-transform:uppercase}
+/* PAIEMENT INTERAC */
+.paybox{margin-top:18px;background:var(--surface);border:3px solid var(--gold);border-radius:var(--radius);padding:22px}
+.paybox h3{margin:0 0 6px;font-size:1.3rem}
+.pay-rows{display:grid;gap:10px;margin:14px 0}
+.pay-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.pay-row .k{font-weight:700;color:var(--muted)}
+.pay-row .v{font-weight:800;font-size:1.08rem}
+.btn-copy{min-height:36px;padding:6px 14px;border-radius:999px;border:2px solid var(--navy);background:transparent;color:var(--ink);font-weight:700;cursor:pointer;font-size:.9rem}
+@media(prefers-color-scheme:dark){.btn-copy{border-color:#ffffff55}}
 /* ARCHIVE */
 .archive{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
 .archive code{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:2px 8px;font-size:.9em}
@@ -265,14 +283,28 @@ footer .flogo em{font-style:normal;color:var(--pink)}
         <div class="pname" style="margin-top:8px">Créateur Pro</div>
         <div class="amount">14,99 $ <small>/ mois</small></div>
         <ul><li>Capsules jusqu'à <strong>30 secondes</strong></li><li>Scénarios IA illimités</li><li>Tous les tons : action, drôle, cinéma, émotion</li><li>Objectifs et textes à l'écran personnalisés</li><li>Logo Sav'art en fin de capsule</li><li>Créations archivées dans ton dossier GitHub</li></ul>
-        <a class="btn btn-pink" href="mailto:savardrjr@gmail.com?subject=Mission%20GTA%20—%20Forfait%20Cr%C3%A9ateur%20Pro">Choisir Créateur Pro</a>
+        <button type="button" class="btn btn-pink" data-forfait data-nom="Créateur Pro" data-montant="14,99 $">Choisir Créateur Pro</button>
       </div>
       <div class="price">
         <div class="pname">Studio Empire</div>
         <div class="amount">39,99 $ <small>/ mois</small></div>
         <ul><li>Capsules de <strong>60 secondes et +</strong></li><li>Séries de missions pour ton commerce</li><li>Voix off et montage bonifiés</li><li>Priorité de production</li><li>Logo Sav'art en fin de capsule</li><li>Archive complète de tes créations sur GitHub</li></ul>
-        <a class="btn btn-dark" href="mailto:savardrjr@gmail.com?subject=Mission%20GTA%20—%20Forfait%20Studio%20Empire">Choisir Studio Empire</a>
+        <button type="button" class="btn btn-dark" data-forfait data-nom="Studio Empire" data-montant="39,99 $">Choisir Studio Empire</button>
       </div>
+    </div>
+
+    <div class="paybox hidden" id="paiement">
+      <h3>💳 Finaliser ta commande — virement Interac</h3>
+      <p style="margin:0">Forfait choisi : <strong id="payNom">Créateur Pro</strong> — <strong id="payMontantEntete">14,99&nbsp;$</strong> / mois</p>
+      <p>Fais un virement Interac avec les informations <strong>exactes</strong> ci-dessous :</p>
+      <div class="pay-rows">
+        <div class="pay-row"><span class="k">Courriel du destinataire</span><span class="v">savardrjr@gmail.com</span><button type="button" class="btn-copy" data-copie="savardrjr@gmail.com">Copier</button></div>
+        <div class="pay-row"><span class="k">Montant du virement</span><span class="v" id="payMontant">14,99&nbsp;$</span></div>
+        <div class="pay-row"><span class="k">Question de sécurité</span><span class="v">studio</span><button type="button" class="btn-copy" data-copie="studio">Copier</button></div>
+        <div class="pay-row"><span class="k">Réponse à la question</span><span class="v">mission</span><button type="button" class="btn-copy" data-copie="mission">Copier</button></div>
+      </div>
+      <p>Dans le <strong>message du virement</strong>, écris le courriel où tu veux recevoir ton activation — c'est comme ça qu'on associe ton paiement à ton forfait.</p>
+      <p style="margin-bottom:0">✅ <strong>Activation :</strong> dès que nous confirmons la réception de ton virement, ton forfait est activé et tu reçois un courriel de confirmation. Des questions avant de payer ? <a href="mailto:savardrjr@gmail.com?subject=Mission%20GTA%20—%20Question%20avant%20commande">Écris-nous</a>.</p>
     </div>
   </section>
 
@@ -300,10 +332,40 @@ footer .flogo em{font-style:normal;color:var(--pink)}
   </div>
 </footer>
 
+<audio id="themeAccueil" src="ritournelle-gta-iv.mp3" loop preload="auto"></audio>
+<button type="button" id="btnTheme" aria-pressed="false" title="Musique du site : la ritournelle Mission GTA">🔊</button>
+
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)};
   var photoURL=null, scenario=null, renderTimer=null, cdTimer=null, playTimer=null;
+
+  // --- Theme d'accueil : ritournelle Mission GTA (signature sonore des capsules
+  // GTA, validee par Roger le 23 nov. 2026), volume 50 %, en boucle sur l'accueil.
+  // Les navigateurs bloquent le son en lecture automatique : le theme demarre au
+  // premier geste de l'utilisateur. Il se met en pause des qu'un autre son joue
+  // (capsule pre-roll ou piste d'une carte de la bibliotheque) pour ne jamais
+  // les ecraser, puis reprend quand ils se terminent.
+  var themeAudio=$('themeAccueil'), themeUnlocked=false, themeMuted=false, autresSons=0;
+  if(themeAudio){ themeAudio.volume=0.5; }
+  function themeSync(){
+    if(!themeAudio) return;
+    if(themeUnlocked && !themeMuted && autresSons===0){
+      if(themeAudio.paused){ var p=themeAudio.play(); if(p&&p.catch)p.catch(function(){}); }
+    } else if(!themeAudio.paused){ themeAudio.pause(); }
+  }
+  function sonCommence(){ autresSons++; themeSync(); }
+  function sonTermine(){ if(autresSons>0)autresSons--; setTimeout(themeSync,750); }
+  function debloquerTheme(){ if(themeUnlocked)return; themeUnlocked=true; themeSync(); }
+  document.addEventListener('pointerdown',debloquerTheme);
+  document.addEventListener('keydown',debloquerTheme);
+  var btnTheme=$('btnTheme');
+  if(btnTheme){ btnTheme.addEventListener('click',function(){
+    themeMuted=!themeMuted;
+    btnTheme.textContent=themeMuted?'🔇':'🔊';
+    btnTheme.setAttribute('aria-pressed',themeMuted?'true':'false');
+    debloquerTheme(); themeSync();
+  }); }
 
   $('photoInput').addEventListener('change',function(e){
     var f=e.target.files[0]; if(!f) return;
@@ -370,8 +432,24 @@ footer .flogo em{font-style:normal;color:var(--pink)}
 
   function showStep(st,i){ if(i<st.steps.length){st.caption.textContent=st.steps[i].cap; st.money.textContent='+ '+st.steps[i].money+' $';} }
 
+  function stopAudio(st,reset){
+    if(st.fadeTimer){clearInterval(st.fadeTimer); st.fadeTimer=null;}
+    if(st.audio){st.audio.pause(); if(reset){try{st.audio.currentTime=0;}catch(e){} st.audio.volume=1;}}
+  }
+  function fadeOutAudio(st){
+    if(!st.audio||st.audio.paused) return;
+    if(st.fadeTimer)clearInterval(st.fadeTimer);
+    st.fadeTimer=setInterval(function(){
+      var v=st.audio.volume-0.1;
+      if(v<=0.05){clearInterval(st.fadeTimer); st.fadeTimer=null; st.audio.pause(); try{st.audio.currentTime=0;}catch(e){} st.audio.volume=1;}
+      else st.audio.volume=v;
+    },60);
+  }
   function runSequence(st){
     if(st.playTimer)clearInterval(st.playTimer); st.playTimer=null;
+    if(!st._sonActif){st._sonActif=true; sonCommence();}
+    stopAudio(st,true);
+    if(st.audio){var pr=st.audio.play(); if(pr&&pr.catch)pr.catch(function(){});}
     st.elapsed=0; st.fill.style.width='0%';
     st.outro.classList.add('hidden');
     [st.bg,st.hud,st.radar,st.caption].forEach(function(el){el.classList.remove('hidden')});
@@ -383,6 +461,8 @@ footer .flogo em{font-style:normal;color:var(--pink)}
       if(idx<st.steps.length) showStep(st,idx);
       if(st.elapsed>=st.total*1000){
         clearInterval(st.playTimer); st.playTimer=null;
+        fadeOutAudio(st);
+        if(st._sonActif){st._sonActif=false; sonTermine();}
         [st.bg,st.hud,st.photo,st.radar,st.caption].forEach(function(el){el.classList.add('hidden')});
         st.outro.classList.remove('hidden'); // logo ALWAYS at the end
         st.fill.style.width='100%';
@@ -393,6 +473,8 @@ footer .flogo em{font-style:normal;color:var(--pink)}
   function expireCard(st){
     if(st.playTimer)clearInterval(st.playTimer);
     if(st.cdTimer)clearInterval(st.cdTimer);
+    if(st._sonActif){st._sonActif=false; sonTermine();}
+    stopAudio(st,true);
     if(st.card.parentNode) st.card.parentNode.removeChild(st.card);
     if(!$('libGrid').children.length) $('libEmpty').classList.remove('hidden');
   }
@@ -430,11 +512,13 @@ footer .flogo em{font-style:normal;color:var(--pink)}
       +'<div class="progress"><i></i></div>'
       +'<div class="lib-title"></div>'
       +'<div class="render-meta"><span class="countdown">⏱️ Rendu disponible encore <strong>15:00</strong> — après, il disparaît de la bibliothèque.</span></div>'
-      +'<button type="button" class="btn btn-gold btn-replay">🔊 Réécouter</button>';
+            +'<button type="button" class="btn btn-gold btn-replay">🔊 Réécouter</button>'
+      +'<audio class="render-audio" src="musique-rendu.mp3" preload="auto"></audio>';
     var st={card:card,steps:steps,total:Math.max(8,Math.min(14,scenario.secs)),elapsed:0,playTimer:null,cdTimer:null,photoSrc:photoURL,
       bg:card.querySelector('.bgimg'),hud:card.querySelector('.hud-top'),money:card.querySelector('.hud-money'),
       photo:card.querySelector('.hero-photo'),radar:card.querySelector('.radar'),caption:card.querySelector('.caption'),
-      outro:card.querySelector('.outro'),fill:card.querySelector('.progress i'),cdTime:card.querySelector('.countdown strong')};
+      outro:card.querySelector('.outro'),fill:card.querySelector('.progress i'),cdTime:card.querySelector('.countdown strong'),
+      audio:card.querySelector('.render-audio'),fadeTimer:null};
     st.stepMs=(st.total*1000)/(steps.length+1);
     st.bg.src=$('playerBgSrc').src;
     card.querySelector('.hud-mission').textContent='MISSION · '+scenario.biz.toUpperCase();
@@ -450,7 +534,61 @@ footer .flogo em{font-style:normal;color:var(--pink)}
     $('bibliotheque').scrollIntoView({behavior:'smooth',block:'center'});
   }
 
-  $('btnRender').addEventListener('click',playRender);
+  // --- Pre-roll (directive de Roger) : la capsule video du site joue D'ABORD,
+  // puis le rendu du pilote gratuit de 10 s demarre automatiquement a la fin.
+  var prerollBox=null, prerollVideo=null, prerollBusy=false;
+  function buildPreroll(){
+    prerollBox=document.createElement('div'); prerollBox.id='preroll'; prerollBox.className='hidden';
+    prerollBox.innerHTML='<div class="preroll-inner"><div class="preroll-tag">🎬 D\'abord, la capsule Mission GTA</div>'
+      +'<video src="capsule-site.mp4" playsinline preload="metadata"></video>'
+      +'<p class="preroll-note">Ton pilote gratuit de 10 secondes démarre juste après la capsule…</p></div>';
+    var bib=$('bibliotheque'); bib.parentNode.insertBefore(prerollBox,bib);
+    prerollVideo=prerollBox.querySelector('video');
+    prerollVideo.addEventListener('ended',finishPreroll);
+    prerollVideo.addEventListener('error',finishPreroll);
+  }
+  function finishPreroll(){
+    if(!prerollBusy) return; prerollBusy=false;
+    sonTermine();
+    if(prerollVideo) prerollVideo.pause();
+    prerollBox.classList.add('hidden');
+    playRender();
+  }
+  function startPreroll(){
+    if(!prerollBox) buildPreroll();
+    if(!prerollBusy) sonCommence();
+    prerollBusy=true;
+    prerollBox.classList.remove('hidden');
+    prerollBox.scrollIntoView({behavior:'smooth',block:'center'});
+    try{prerollVideo.currentTime=0;}catch(e){}
+    var pr=prerollVideo.play(); if(pr&&pr.catch)pr.catch(function(){finishPreroll();});
+  }
+  $('btnRender').addEventListener('click',function(){
+    if(!scenario) return;
+    if(scenario.plan==='free'){ startPreroll(); } else { playRender(); }
+  });
+
+  // --- Paiement des forfaits payants : virement Interac (mode de paiement
+  // officiel decide par Roger le 23 nov. 2026). Les boutons « Choisir » des
+  // forfaits Pro et Studio ouvrent le panneau de commande avec le bon montant.
+  var payBox=$('paiement');
+  document.querySelectorAll('[data-forfait]').forEach(function(b){
+    b.addEventListener('click',function(){
+      $('payNom').textContent=b.getAttribute('data-nom');
+      $('payMontantEntete').textContent=b.getAttribute('data-montant');
+      $('payMontant').textContent=b.getAttribute('data-montant');
+      payBox.classList.remove('hidden');
+      payBox.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+  document.querySelectorAll('[data-copie]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var texte=b.getAttribute('data-copie'), ancien=b.textContent;
+      function fait(){ b.textContent='Copié ✔'; setTimeout(function(){b.textContent=ancien;},1600); }
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(texte).then(fait).catch(function(){fait();}); }
+      else { fait(); }
+    });
+  });
 })();
 </script>
 </body>
