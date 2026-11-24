@@ -1,8 +1,11 @@
 # Site Mission GTA (github-site) — ÉTAT
 
-**Site public (inchangé tant que le push est bloqué)** : https://neuraxl.github.io/mission-gta/
-**État local : PRÊT À POUSSER — en attente de la reconnexion GitHub** (jeton hérité mort, 401 ; la reconnexion sécurisée attend le geste de Roger). Aucune tentative de push faite.
-Dernière synchro réussie : main `9ede7a9` / gh-pages `15037c1` (voir le registre `../github-site.muse-github-snapshot-sync.json`, section `pending_push` pour les fichiers en attente).
+**Site public** : https://neuraxl.github.io/mission-gta/
+**État : EN LIGNE ET À JOUR — push réussi le 23 nov. 2026** (reconnexion GitHub faite par Roger : nouveau jeton classique, scope repo ; l'ancien jeton hérité était mort, 401). Site public vérifié en ligne après le push (page + les 3 fichiers médias servis).
+Dernière synchro réussie : main `c53ea7f` / gh-pages `ccb6608` (voir le registre `../github-site.muse-github-snapshot-sync.json`).
+Vérification côté visiteur faite le 23 nov. (navigateur, 5 points : accueil, ritournelle et bouton muet, pré-roll Gratuit, Bibliothèque, panneau Interac des deux forfaits — tout confirmé ; seule limite : l'environnement de test ne pouvait pas entendre le son). **Confirmation finale de Roger le 23 nov. : « C'est parfait pour moi, téléphone et portable »** — la ritournelle entendue à son oreille, sur son téléphone et son portable.
+**Bibliothèque — DÉCISION DE ROGER (23 nov., après diagnostic)** : la Bibliothèque ne conserve rien (aucun stockage local ; au rechargement, tout s'efface) — un rendu n'y apparaît que pendant les 15 minutes qui suivent sa création, puis disparaît. Roger a choisi explicitement de **LAISSER COMME C'EST** : cette disparition après 15 minutes est le design voulu, pas un bogue. Une Bibliothèque vide = aucune mission en cours, c'est normal. Ne pas « corriger » sans un nouvel ordre de Roger.
+**MISE À JOUR (24 nov. 2026, directive de Roger)** : la durée d'affichage passe de 15 à **10 minutes** (« Pas besoin de conserver plus de 10 minutes après le rendu ») — le design de disparition, lui, reste exactement comme décidé le 23 nov.
 
 ## Changements locaux en attente de push (23 nov. 2026)
 
@@ -35,3 +38,18 @@ Dernière synchro réussie : main `9ede7a9` / gh-pages `15037c1` (voir le regist
 - Flux de paiement Interac : **15/15** — panneau masqué au départ, ouverture par chaque forfait avec le bon montant (14,99 $ / 39,99 $), coordonnées exactes, mention d'activation après confirmation, copie du courriel vérifiée au presse-papiers, forfait Gratuit inchangé (ancre #studio).
 - Valeurs brutes (règle d'affichage) : **4/4** — valeurs rendues exactement `savardrjr@gmail.com`, `14,99 $`, `studio`, `mission` ; aucun «, », >>, << dans le bloc ; copies question/réponse = valeurs nues au presse-papiers.
 - Note de méthode : pas de seek vidéo dans les tests (le serveur HTTP local ne gère pas les requêtes Range) — la fin du pré-roll est testée en lecture linéaire complète (30,6 s).
+
+## Corrections du 24 nov. 2026 — le site devient 100 % opérationnel (directives de Roger)
+
+**Problème signalé par Roger** : un client qui décrivait sa mission (ex. entrer dans un dépanneur, acheter un paquet de cigarettes, ressortir) ne recevait que le gabarit — les 4 panneaux de la pochette avec des textes par-dessus — jamais la vidéo de CE QU'IL AVAIT DÉCRIT. Et le site ne demandait même pas son courriel : aucune livraison n'était possible.
+
+**Correctifs appliqués à `index.html`** (21 remplacements, sauvegarde préalable : `build/index-avant-correction-2026-11-24.html`) :
+1. **Le rendu est étiqueté APERÇU partout** : chip APERÇU sur le lecteur, badge de l'accueil, étape 03 réécrite, bibliothèque renommée « les aperçus en cours » + phrase explicite « L'aperçu est une simulation instantanée », bouton « Lancer l'aperçu », compte à rebours « Aperçu disponible encore », carte Gratuit, règle de la maison nº 2, ligne d'archive, note du pré-roll.
+2. **Durée d'affichage de l'aperçu : 10 minutes** (au lieu de 15) — compte à rebours `remain=600`, textes harmonisés.
+3. **Deux nouveaux champs au formulaire** : nº 9 « Ton courriel — pour recevoir ta vidéo » (`#clientEmail`) et nº 10 « Décris ta mission avec tes mots » (`#missionStory`, la description libre qui manquait — ex. de Roger : le salon de coiffure). La description libre entre aussi dans le scénario .txt téléchargé.
+4. **Bouton « 📩 Envoyer ma demande au studio »** : ouvre le courriel du client pré-rempli vers savardrjr@gmail.com — sujet « Mission GTA — Demande de capsule : <commerce> », corps complet : courriel du client, héros, commerce, produit, ville, véhicule, ton, forfait, SA description libre et le scénario d'aperçu. Sans courriel valide : avertissement sur place, aucun envoi. Note affichée après clic : joindre sa photo de héros au courriel.
+5. **Promesse clarifiée** : l'accueil, l'étape 03, la bibliothèque, la carte Gratuit et la règle nº 2 disent maintenant que la VRAIE capsule, produite par le studio à partir du scénario du client, est **envoyée par courriel**.
+
+**Boucle de production (mise en place le 24 nov.)** : recette `../PRODUCTION-DEMANDES.md` (capsule gratuite 10 s verticale : pochette 4 panneaux **animés indépendamment**, plans générés à partir de la description du client — son lieu, son action, ses textes —, HUD GTA, ritournelle 50 %, final MISSION ACCOMPLIE + logo Sav'art, −14 LUFS, double vérification, livraison par courriel au client, étiquette Gmail Label_9, registre `../demandes/registre.json`). Tâche planifiée **aux 2 heures** : `mission-gta-demandes-production` (mandat Empire des émotions — aucun OK de Roger requis).
+
+**Tests locaux (Playwright, 24 nov.)** : 22/23 — formulaire, avertissement sans courriel, mailto complet vérifié champ par champ sur le cas « Salon Nathalie Coiffure » (description « coiffer une cliente » incluse), carte d'aperçu + chip APERÇU + compte à rebours parti de 10:00, panneau Interac et thème d'accueil sans régression. Le seul échec : le chargement des polices Google Fonts bloqué par le tunnel de la VM de test (pré-existant, identique sur la version précédente ; la page se rabat sur ses polices de secours).
